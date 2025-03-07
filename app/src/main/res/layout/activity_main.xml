@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/calcButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="28dp"
+        android:onClick="Calculate"
+        android:text="Calculate"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/startLoc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:hint="Your starting location"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/secLoc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Second place here"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="@+id/startLoc"
+        app:layout_constraintStart_toStartOf="@+id/startLoc"
+        app:layout_constraintTop_toBottomOf="@+id/startLoc" />
+
+    <EditText
+        android:id="@+id/thrLoc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Third place here"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="@+id/secLoc"
+        app:layout_constraintStart_toStartOf="@+id/secLoc"
+        app:layout_constraintTop_toBottomOf="@+id/secLoc" />
+
+    <EditText
+        android:id="@+id/fouLoc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Fourth place here"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="@+id/thrLoc"
+        app:layout_constraintStart_toStartOf="@+id/thrLoc"
+        app:layout_constraintTop_toBottomOf="@+id/thrLoc" />
+
+    <CheckBox
+        android:id="@+id/checkReturn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Will you return to your starting location"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/fouLoc"
+        app:layout_constraintStart_toStartOf="@+id/fouLoc"
+        app:layout_constraintTop_toBottomOf="@+id/fouLoc" />
+
+    <Button
+        android:id="@+id/showButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="32dp"
+        android:onClick="Show"
+        android:text="Show my location"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/errorTxt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkReturn"
+        tools:text="fhshsh" />
+
+    <TextView
+        android:id="@+id/errorTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="100dp"
+        android:textColor="#FB0000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="error" />
+</androidx.constraintlayout.widget.ConstraintLayout>
