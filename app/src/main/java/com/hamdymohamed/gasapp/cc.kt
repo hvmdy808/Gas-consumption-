@@ -1,27 +1,27 @@
 package com.hamdymohamed.gasapp
 
-import android.app.Activity
+
+
+
+
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+
 
 class cc : AppCompatActivity() {
     lateinit var ccNum: EditText
     lateinit var gasType: EditText
     lateinit var errorText: TextView
 
-//    val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-//        if (result.resultCode == Activity.RESULT_OK) {
-//            errorText.setText("")
-//        }
-//    }
+    lateinit var file: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -34,6 +34,13 @@ class cc : AppCompatActivity() {
         ccNum = findViewById(R.id.ccNum)
         gasType = findViewById(R.id.gasType)
         errorText = findViewById(R.id.errorText)
+
+        file = getSharedPreferences("data", MODE_PRIVATE)
+        val savedCcNum = file.getString("ccNum", "")
+        val savedGasType = file.getString("gasType", "")
+        ccNum.setText(savedCcNum)
+        gasType.setText(savedGasType)
+
     }
 
     fun Next(view: View) {
@@ -50,6 +57,10 @@ class cc : AppCompatActivity() {
             errorText.setText("Invalid gasoline type")
             return
         }
+        val editor = file.edit()
+        editor.putString("ccNum", ccNum.text.toString())
+        editor.putString("gasType", gasType.text.toString())
+        editor.apply()
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("cc", ccNum.text.toString())
         intent.putExtra("gasType", gasType.text.toString())
@@ -57,4 +68,12 @@ class cc : AppCompatActivity() {
         //launcher.launch(intent)
         startActivity(intent)
     }
+    override fun onPause() {
+        super.onPause()
+        val editor = file.edit()
+        editor.putString("ccNum", ccNum.text.toString())
+        editor.putString("gasType", gasType.text.toString())
+        editor.apply()
+    }
+
 }
