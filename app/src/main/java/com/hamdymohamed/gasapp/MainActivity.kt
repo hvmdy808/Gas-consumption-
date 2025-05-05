@@ -125,9 +125,9 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
         val dist4: Float
         val add1 = "${startLoc.text} Egypt"
         val add2 = "${secLoc.text} Egypt"
-        val add3 = "${thrLoc.text} Egypt"
-        val add4 = "${fouLoc.text} Egypt"
-        var placesEntered = mutableListOf("")
+        var add3 = "${thrLoc.text} Egypt"
+        var add4 = "${fouLoc.text} Egypt"
+        val placesEntered = mutableListOf<String>()
         if (add1.isNullOrEmpty() || add1 == " Egypt") {
             errorTxt.append("Add a valid starting location. ")
             resultText.text = ""
@@ -163,6 +163,10 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
             } else {
                 placesEntered.add(add4)
             }
+        }
+        if(add4 != " Egypt" && add3 == " Egypt"){
+            add3 = add4
+            add4 = " Egypt"
         }
         val geoCoder = Geocoder(this)
         val addList1 = geoCoder.getFromLocationName(add1, 1)
@@ -224,6 +228,8 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
         }
         if (checkBstRoute.isChecked && !(add3.isNullOrEmpty() || add3 == " Egypt")) {
             bstRouteButton.isEnabled = true
+        }else{
+            bstRouteButton.isEnabled = false
         }
 
         if (!smthngWrong) {
@@ -301,8 +307,8 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
         val dist4: Float
         val add1 = "${startLoc.text} Egypt"
         val add2 = "${secLoc.text} Egypt"
-        val add3 = "${thrLoc.text} Egypt"
-        val add4 = "${fouLoc.text} Egypt"
+        var add3 = "${thrLoc.text} Egypt"
+        var add4 = "${fouLoc.text} Egypt"
         var placesEntered = mutableListOf("")
         if (add1.isNullOrEmpty() || add1 == " Egypt") {
             errorTxt.append("Add a valid starting location. ")
@@ -340,6 +346,12 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                 placesEntered.add(add4)
             }
         }
+
+        if(add4 != " Egypt" && add3 == " Egypt"){
+            add3 = add4
+            add4 = " Egypt"
+        }
+
         val geoCoder = Geocoder(this)
         val addList1 = geoCoder.getFromLocationName(add1, 1)
         if (!addList1.isNullOrEmpty()) {
@@ -354,7 +366,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                 loc2.longitude = addList2[0].longitude
                 dist1 = loc1.distanceTo(loc2) / 1000
                 result += "Distance between ${startLoc.text} to ${secLoc.text} =$dist1 km"
-                var lastLoc = loc2
+                var lastLoc = add2
                 if (!(add3.isNullOrEmpty() || add3 == " Egypt")) {
                     val addList3 = geoCoder.getFromLocationName(add3, 1)
                     if (!addList3.isNullOrEmpty()) {
@@ -362,8 +374,8 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                         loc3.latitude = addList3[0].latitude
                         loc3.longitude = addList3[0].longitude
                         dist2 = loc2.distanceTo(loc3) / 1000
-                        result += "\nDistance between ${secLoc.text} to ${thrLoc.text} =$dist2 km"
-                        lastLoc = loc3
+                        result += "\nDistance between ${secLoc.text} to ${add3} =$dist2 km"
+                        lastLoc = add3
                         if (!(add4.isNullOrEmpty() || add4 == " Egypt")) {
                             val addList4 = geoCoder.getFromLocationName(add4, 1)
                             if (!addList4.isNullOrEmpty()) {
@@ -371,8 +383,8 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                                 loc4.latitude = addList4[0].latitude
                                 loc4.longitude = addList4[0].longitude
                                 dist3 = loc3.distanceTo(loc4) / 1000
-                                result += "\nDistance between ${thrLoc.text} to ${fouLoc.text} =$dist3 km"
-                                lastLoc = loc4
+                                result += "\nDistance between ${add3} to ${add4} =$dist3 km"
+                                lastLoc = add4
                                 if (checkReturn.isChecked) {
                                     dist4 = loc4.distanceTo(loc1) / 1000
                                     result += "\nDistance between ${fouLoc.text} to ${startLoc.text} =$dist4 km"
@@ -384,7 +396,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                         } else {
                             if (checkReturn.isChecked) {
                                 dist4 = loc3.distanceTo(loc1) / 1000
-                                result += "\nDistance between ${thrLoc.text} to ${startLoc.text} =$dist4 km"
+                                result += "\nDistance between ${lastLoc} to ${startLoc.text} =$dist4 km"
                             }
                         }
                     } else {
