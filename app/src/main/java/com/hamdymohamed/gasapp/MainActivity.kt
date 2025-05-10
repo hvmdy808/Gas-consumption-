@@ -313,7 +313,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
         val geocoder = Geocoder(this)
         val addressList = geocoder.getFromLocation(lat, lon, 1)
         if (!addressList.isNullOrEmpty()) {
-            startLoc.append("\n${addressList[0].getAddressLine(0)}")
+            startLoc.setText("${addressList[0].getAddressLine(0)}")
         }
     }
 
@@ -336,7 +336,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
         fouLoc.isEnabled = true
         checkReturn.isEnabled = true
         calcButton.isEnabled = true
-        showButton.isEnabled = false
+        //showButton.isEnabled = false
         checkBstRoute.isEnabled = true
     }
 
@@ -352,7 +352,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
         val add2 = "${secLoc.text} Egypt"
         var add3 = "${thrLoc.text} Egypt"
         var add4 = "${fouLoc.text} Egypt"
-        var placesEntered = mutableListOf("")
+        val placesEntered = mutableListOf("")
         if (add1.isNullOrEmpty() || add1 == " Egypt") {
             errorTxt.append("Add a valid starting location. ")
             resultText.text = ""
