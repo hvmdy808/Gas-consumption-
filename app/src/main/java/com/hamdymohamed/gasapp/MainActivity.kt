@@ -114,7 +114,6 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
     }
 
     fun Calculate(view: View) {
-        detailsButton.isEnabled= true
         errorTxt.text = ""
         var result = ""
         var totalDistance: Float = 0.0F
@@ -166,28 +165,50 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
         }
         if(add4 != " Egypt" && add3 == " Egypt"){
             add3 = add4
-            add4 = " Egypt"
+            add4 = ""
         }
         val geoCoder = Geocoder(this)
         val addList1 = geoCoder.getFromLocationName(add1, 1)
         if (!addList1.isNullOrEmpty()) {
+            if(addList1[0].latitude == 26.820553 && addList1[0].longitude == 30.802498000000003){
+                result = "The first location is not valid"
+                errorTxt.text = result
+                smthngWrong = false
+                detailsButton.isEnabled = false
+                return
+            }
             val loc1 = Location("")
             loc1.latitude = addList1[0].latitude
             loc1.longitude = addList1[0].longitude
+            println("${loc1.latitude} -- ${loc1.longitude}")
 
             val addList2 = geoCoder.getFromLocationName(add2, 1)
             if (!addList2.isNullOrEmpty()) {
+                if(addList2[0].latitude == 26.820553 && addList2[0].longitude == 30.802498000000003){
+                    result = "The second location is not valid"
+                    errorTxt.text = result
+                    smthngWrong = false
+                    detailsButton.isEnabled = false
+                    return
+                }
                 val loc2 = Location("")
                 loc2.latitude = addList2[0].latitude
                 loc2.longitude = addList2[0].longitude
+                println("${loc2.latitude} -- ${loc2.longitude}")
                 dist1 = loc1.distanceTo(loc2) / 1000
                 totalDistance += dist1
                 var lastLoc = loc2
 
-
                 if (!(add3.isNullOrEmpty() || add3 == " Egypt")) {
                     val addList3 = geoCoder.getFromLocationName(add3, 1)
                     if (!addList3.isNullOrEmpty()) {
+                        if(addList3[0].latitude == 26.820553 && addList3[0].longitude == 30.802498000000003){
+                            result = "The third location is not valid"
+                            errorTxt.text = result
+                            smthngWrong = false
+                            detailsButton.isEnabled = false
+                            return
+                        }
                         val loc3 = Location("")
                         loc3.latitude = addList3[0].latitude
                         loc3.longitude = addList3[0].longitude
@@ -198,6 +219,13 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                         if (!(add4.isNullOrEmpty() || add4 == " Egypt")) {
                             val addList4 = geoCoder.getFromLocationName(add4, 1)
                             if (!addList4.isNullOrEmpty()) {
+                                if(addList4[0].latitude == 26.820553 && addList4[0].longitude == 30.802498000000003){
+                                    result = "The fourth location is not valid"
+                                    errorTxt.text = result
+                                    smthngWrong = false
+                                    detailsButton.isEnabled = false
+                                    return
+                                }
                                 val loc4 = Location("")
                                 loc4.latitude = addList4[0].latitude
                                 loc4.longitude = addList4[0].longitude
@@ -227,12 +255,16 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
             smthngWrong = true
         }
         if (checkBstRoute.isChecked && !(add3.isNullOrEmpty() || add3 == " Egypt")) {
+            println("fff")
+            println(add3)
             bstRouteButton.isEnabled = true
         }else{
+            println("ggg")
             bstRouteButton.isEnabled = false
         }
 
         if (!smthngWrong) {
+            detailsButton.isEnabled = true
             val cost: Float = if (gasType == 80) {
                 13.75F
             } else if (gasType == 92) {
@@ -241,7 +273,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                 17F
             }
             resultText.text = result
-            resultText.append("\nApproximate total distance = ${totalDistance}")
+            resultText.append("\nApproximate total distance = ${totalDistance} Km")
             if (cc != null && gasType != null) {
                 if (cc!! in 50..500) {
                     resultText.append("\nApproximate gasoline needed: ${(2 * totalDistance) / 100} - ${(4 * totalDistance) / 100} L")
@@ -265,6 +297,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
             }
         } else {
             resultText.text = result
+            detailsButton.isEnabled = false
         }
         detailsButton.isEnabled = true
     }
@@ -283,6 +316,16 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
             startLoc.append("\n${addressList[0].getAddressLine(0)}")
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        val prefs = getSharedPreferences("data", MODE_PRIVATE)
+        val ccNum = prefs.getString("ccNum", null)
+        val gas = prefs.getString("gasType", null)
+        cc = ccNum.toString().toInt()
+        gasType = gas.toString().toInt()
+    }
+
 
     fun Show(view: View) {
         airLoc = AirLocation(this, this, true)
@@ -427,11 +470,8 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
 
 
     fun setting(view: View) {
-
         val intent = Intent(this, com.hamdymohamed.gasapp.cc::class.java)
         startActivity(intent)
-        finish()
-
     }
 
     fun showBstRoute(view: View) {

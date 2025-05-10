@@ -61,12 +61,9 @@ class cc : AppCompatActivity() {
         editor.putString("ccNum", ccNum.text.toString())
         editor.putString("gasType", gasType.text.toString())
         editor.apply()
-        val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra("cc", ccNum.text.toString())
-        intent.putExtra("gasType", gasType.text.toString())
         errorText.setText("")
         //launcher.launch(intent)
-        startActivity(intent)
+        finish()
     }
     override fun onPause() {
         super.onPause()
