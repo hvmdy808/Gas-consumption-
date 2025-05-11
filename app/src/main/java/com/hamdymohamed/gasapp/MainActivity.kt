@@ -122,59 +122,66 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
         val dist2: Float
         val dist3: Float
         val dist4: Float
-        val add1 = "${startLoc.text} Egypt"
-        val add2 = "${secLoc.text} Egypt"
-        var add3 = "${thrLoc.text} Egypt"
-        var add4 = "${fouLoc.text} Egypt"
+        val add1 = "${startLoc.text.trim().toString().lowercase()} Egypt"
+        val add2 = "${secLoc.text.trim().toString().lowercase()} Egypt"
+        var add3 = "${thrLoc.text.trim().toString().lowercase()} Egypt"
+        var add4 = "${fouLoc.text.trim().toString().lowercase()} Egypt"
         val placesEntered = mutableListOf<String>()
         if (add1.isNullOrEmpty() || add1 == " Egypt") {
             errorTxt.append("Add a valid starting location. ")
             resultText.text = ""
             return
         } else {
-            placesEntered.add(add1)
+            placesEntered.add(add1.lowercase())
         }
+        println("1 ----- ${add1}")
         if (add2.isNullOrEmpty() || add2 == " Egypt") {
             errorTxt.append("Add a valid second location. ")
             resultText.text = ""
             return
         }
-        if (placesEntered.contains(add2)) {
+        if (placesEntered.contains(add2.lowercase())) {
             errorTxt.append("Enter a different second location")
+            resultText.text = ""
             return
         } else {
-            placesEntered.add(add2)
+            placesEntered.add(add2.lowercase())
         }
 
         if (!(add3.isNullOrEmpty() || add3 == " Egypt")) {
-            if (placesEntered.contains(add3)) {
+            if (placesEntered.contains(add3.lowercase())) {
                 errorTxt.append("Enter a different third location")
+                resultText.text = ""
                 return
             } else {
-                placesEntered.add(add3)
+                placesEntered.add(add3.lowercase())
             }
         }
 
         if (!(add4.isNullOrEmpty() || add4 == " Egypt")) {
-            if (placesEntered.contains(add4)) {
+            if (placesEntered.contains(add4.lowercase())) {
                 errorTxt.append("Enter a different fourth location")
+                resultText.text = ""
                 return
             } else {
-                placesEntered.add(add4)
+                placesEntered.add(add4.lowercase())
             }
         }
         if(add4 != " Egypt" && add3 == " Egypt"){
             add3 = add4
             add4 = ""
         }
+        println(placesEntered)
         val geoCoder = Geocoder(this)
         val addList1 = geoCoder.getFromLocationName(add1, 1)
         if (!addList1.isNullOrEmpty()) {
-            if(addList1[0].latitude == 26.820553 && addList1[0].longitude == 30.802498000000003){
+            if(addList1[0].latitude == 26.820553 && addList1[0].longitude == 30.802498000000003 && add1!="egypt Egypt"){
                 result = "The first location is not valid"
+                println(add1)
                 errorTxt.text = result
                 smthngWrong = false
                 detailsButton.isEnabled = false
+                resultText.text = ""
                 return
             }
             val loc1 = Location("")
@@ -184,11 +191,12 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
 
             val addList2 = geoCoder.getFromLocationName(add2, 1)
             if (!addList2.isNullOrEmpty()) {
-                if(addList2[0].latitude == 26.820553 && addList2[0].longitude == 30.802498000000003){
+                if(addList2[0].latitude == 26.820553 && addList2[0].longitude == 30.802498000000003 && add2!="egypt Egypt"){
                     result = "The second location is not valid"
                     errorTxt.text = result
                     smthngWrong = false
                     detailsButton.isEnabled = false
+                    resultText.text = ""
                     return
                 }
                 val loc2 = Location("")
@@ -202,11 +210,12 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                 if (!(add3.isNullOrEmpty() || add3 == " Egypt")) {
                     val addList3 = geoCoder.getFromLocationName(add3, 1)
                     if (!addList3.isNullOrEmpty()) {
-                        if(addList3[0].latitude == 26.820553 && addList3[0].longitude == 30.802498000000003){
+                        if(addList3[0].latitude == 26.820553 && addList3[0].longitude == 30.802498000000003 && add3!="egypt Egypt"){
                             result = "The third location is not valid"
                             errorTxt.text = result
                             smthngWrong = false
                             detailsButton.isEnabled = false
+                            resultText.text = ""
                             return
                         }
                         val loc3 = Location("")
@@ -219,11 +228,12 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                         if (!(add4.isNullOrEmpty() || add4 == " Egypt")) {
                             val addList4 = geoCoder.getFromLocationName(add4, 1)
                             if (!addList4.isNullOrEmpty()) {
-                                if(addList4[0].latitude == 26.820553 && addList4[0].longitude == 30.802498000000003){
+                                if(addList4[0].latitude == 26.820553 && addList4[0].longitude == 30.802498000000003 && add4!="egypt Egypt"){
                                     result = "The fourth location is not valid"
                                     errorTxt.text = result
                                     smthngWrong = false
                                     detailsButton.isEnabled = false
+                                    resultText.text = ""
                                     return
                                 }
                                 val loc4 = Location("")
@@ -348,45 +358,48 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
         val dist2: Float
         val dist3: Float
         val dist4: Float
-        val add1 = "${startLoc.text} Egypt"
-        val add2 = "${secLoc.text} Egypt"
-        var add3 = "${thrLoc.text} Egypt"
-        var add4 = "${fouLoc.text} Egypt"
-        val placesEntered = mutableListOf("")
+        val add1 = "${startLoc.text.toString().trim().lowercase()} Egypt"
+        val add2 = "${secLoc.text.toString().trim().lowercase()} Egypt"
+        var add3 = "${thrLoc.text.toString().trim().lowercase()} Egypt"
+        var add4 = "${fouLoc.text.toString().trim().lowercase()} Egypt"
+        val placesEntered = mutableListOf<String>()
         if (add1.isNullOrEmpty() || add1 == " Egypt") {
             errorTxt.append("Add a valid starting location. ")
             resultText.text = ""
             return
         } else {
-            placesEntered.add(add1)
+            placesEntered.add(add1.lowercase())
         }
         if (add2.isNullOrEmpty() || add2 == " Egypt") {
             errorTxt.append("Add a valid second location. ")
             resultText.text = ""
             return
         }
-        if (placesEntered.contains(add2)) {
+        if (placesEntered.contains(add2.lowercase())) {
             errorTxt.append("Enter a different second location")
+            resultText.text = ""
             return
         } else {
-            placesEntered.add(add2)
+            placesEntered.add(add2.lowercase())
         }
 
         if (!(add3.isNullOrEmpty() || add3 == " Egypt")) {
-            if (placesEntered.contains(add3)) {
+            if (placesEntered.contains(add3.lowercase())) {
                 errorTxt.append("Enter a different third location")
+                resultText.text = ""
                 return
             } else {
-                placesEntered.add(add3)
+                placesEntered.add(add3.lowercase())
             }
         }
 
         if (!(add4.isNullOrEmpty() || add4 == " Egypt")) {
-            if (placesEntered.contains(add4)) {
+            if (placesEntered.contains(add4.lowercase())) {
                 errorTxt.append("Enter a different fourth location")
+                resultText.text = ""
                 return
             } else {
-                placesEntered.add(add4)
+                placesEntered.add(add4.lowercase())
             }
         }
 
@@ -398,12 +411,30 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
         val geoCoder = Geocoder(this)
         val addList1 = geoCoder.getFromLocationName(add1, 1)
         if (!addList1.isNullOrEmpty()) {
+            if(addList1[0].latitude == 26.820553 && addList1[0].longitude == 30.802498000000003 && add1!="egypt Egypt"){
+                result = "The first location is not valid"
+                println(add1)
+                errorTxt.text = result
+                smthngWrong = false
+                detailsButton.isEnabled = false
+                resultText.text = ""
+                return
+            }
             val loc1 = Location("")
             loc1.latitude = addList1[0].latitude
             loc1.longitude = addList1[0].longitude
 
             val addList2 = geoCoder.getFromLocationName(add2, 1)
             if (!addList2.isNullOrEmpty()) {
+                if(addList2[0].latitude == 26.820553 && addList2[0].longitude == 30.802498000000003 && add2!="egypt Egypt"){
+                    result = "The second location is not valid"
+                    println(add2)
+                    errorTxt.text = result
+                    smthngWrong = false
+                    detailsButton.isEnabled = false
+                    resultText.text = ""
+                    return
+                }
                 val loc2 = Location("")
                 loc2.latitude = addList2[0].latitude
                 loc2.longitude = addList2[0].longitude
@@ -413,6 +444,15 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                 if (!(add3.isNullOrEmpty() || add3 == " Egypt")) {
                     val addList3 = geoCoder.getFromLocationName(add3, 1)
                     if (!addList3.isNullOrEmpty()) {
+                        if(addList3[0].latitude == 26.820553 && addList3[0].longitude == 30.802498000000003 && add3!="egypt Egypt"){
+                            result = "The third location is not valid"
+                            println(add3)
+                            errorTxt.text = result
+                            smthngWrong = false
+                            detailsButton.isEnabled = false
+                            resultText.text = ""
+                            return
+                        }
                         val loc3 = Location("")
                         loc3.latitude = addList3[0].latitude
                         loc3.longitude = addList3[0].longitude
@@ -422,15 +462,24 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                         if (!(add4.isNullOrEmpty() || add4 == " Egypt")) {
                             val addList4 = geoCoder.getFromLocationName(add4, 1)
                             if (!addList4.isNullOrEmpty()) {
+                                if(addList4[0].latitude == 26.820553 && addList4[0].longitude == 30.802498000000003 && add4!="egypt Egypt"){
+                                    result = "The fourth location is not valid"
+                                    println(add4)
+                                    errorTxt.text = result
+                                    smthngWrong = false
+                                    detailsButton.isEnabled = false
+                                    resultText.text = ""
+                                    return
+                                }
                                 val loc4 = Location("")
                                 loc4.latitude = addList4[0].latitude
                                 loc4.longitude = addList4[0].longitude
                                 dist3 = loc3.distanceTo(loc4) / 1000
-                                result += "\nDistance between ${add3} to ${add4} =$dist3 km"
+                                result += "\nDistance between ${lastLoc} to ${add4} =$dist3 km"
                                 lastLoc = add4
                                 if (checkReturn.isChecked) {
                                     dist4 = loc4.distanceTo(loc1) / 1000
-                                    result += "\nDistance between ${fouLoc.text} to ${startLoc.text} =$dist4 km"
+                                    result += "\nDistance between ${lastLoc} to ${startLoc.text} =$dist4 km"
                                 }
                             } else {
                                 result = "The fourth location is not valid"
@@ -438,8 +487,8 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                             }
                         } else {
                             if (checkReturn.isChecked) {
-                                dist4 = loc3.distanceTo(loc1) / 1000
-                                result += "\nDistance between ${lastLoc} to ${startLoc.text} =$dist4 km"
+                                dist3 = loc3.distanceTo(loc1) / 1000
+                                result += "\nDistance between ${lastLoc} to ${startLoc.text} =$dist3 km"
                             }
                         }
                     } else {
@@ -448,8 +497,8 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                     }
                 } else {
                     if (checkReturn.isChecked) {
-                        dist4 = loc2.distanceTo(loc1) / 1000
-                        result += "\nDistance between ${secLoc.text} to ${startLoc.text} =$dist4 km"
+                        dist2 = loc2.distanceTo(loc1) / 1000
+                        result += "\nDistance between ${secLoc.text} to ${startLoc.text} =$dist2 km"
                     }
                 }
             } else {
@@ -479,8 +528,8 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
         errorTxt.text = ""
 
         // Gather addresses with " Egypt" appended.
-        val addresses = ArrayList<String>()
-        val addr1 = startLoc.text.toString().trim() + " Egypt"
+        val addresses = mutableListOf<String>()
+        val addr1 = startLoc.text.toString().trim().lowercase() + " Egypt"
         if (addr1.trim() == "Egypt") {
             errorTxt.text = "Add a valid starting location."
             resultText.text = ""
@@ -488,27 +537,53 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
         }
         addresses.add(addr1)
 
-        val addr2 = secLoc.text.toString().trim()
-        if (addr2.isNotEmpty() && addr2 != "Egypt") {
-            addresses.add(addr2 + " Egypt")
+        val addr2 = secLoc.text.toString().trim().lowercase() + " Egypt"
+        if (addr2.trim() == "Egypt") {
+            errorTxt.text = "Add a valid second location."
+            resultText.text = ""
+            return
+        }
+        if(addresses.contains(addr2)){
+            errorTxt.text = "Add a different second location."
+            resultText.text = ""
+            return
+        }else{
+            addresses.add(addr2)
         }
 
-        val addr3 = thrLoc.text.toString().trim()
-        if (addr3.isNotEmpty() && addr3 != "Egypt") {
-            addresses.add(addr3 + " Egypt")
+        val addr3 = thrLoc.text.toString().trim().lowercase() + " Egypt"
+        if (addr3.isNotEmpty() && addr3 != " Egypt") {
+            if(addresses.contains(addr3)){
+                errorTxt.text = "Add a different third location."
+                resultText.text = ""
+                return
+            }else{
+                addresses.add(addr3)
+            }
         }
 
-        val addr4 = fouLoc.text.toString().trim()
-        if (addr4.isNotEmpty() && addr4 != "Egypt") {
-            addresses.add(addr4 + " Egypt")
+        val addr4 = fouLoc.text.toString().trim().lowercase() + " Egypt"
+        if (addr4.isNotEmpty() && addr4 != " Egypt") {
+            if(addresses.contains(addr4)){
+                errorTxt.text = "Add a different fourth location."
+                resultText.text = ""
+                return
+            }else{
+                addresses.add(addr4)
+            }
         }
-
+        if(addresses.size <3){
+            errorTxt.text = "You must have 3 locations at least"
+            resultText.text = ""
+            return
+        }
         // Convert addresses to Location objects using Geocoder.
         val geoCoder = Geocoder(this)
-        val locations = ArrayList<Location>()
+        val locations = mutableListOf<Location>()
+        println(addresses)
         for (addr in addresses) {
             val results = geoCoder.getFromLocationName(addr, 1)
-            if (results == null || results.isEmpty()) {
+            if (results.isNullOrEmpty() || (results[0].latitude == 26.820553 && results[0].longitude == 30.802498000000003 && addr!="egypt Egypt")) {
                 errorTxt.text = "Invalid address: $addr"
                 resultText.text = ""
                 return
