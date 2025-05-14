@@ -712,6 +712,13 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
         if (LocationsViewed.size < 2) {
             throw IllegalArgumentException("At least 2 locations needed.")
         }
+        for(loc in LocationsViewed){
+            if (loc.longitude == 30.802498000000003 && loc.latitude == 26.820553) {
+                errorTxt.text = "Egypt is not a specific location to show in the map"
+                resultText.text = ""
+                return
+            }
+        }
         val origin = "${LocationsViewed[0].latitude},${LocationsViewed[0].longitude}"
         val destination = "${LocationsViewed[LocationsViewed.size - 1].latitude},${LocationsViewed[LocationsViewed.size - 1].longitude}"
 
