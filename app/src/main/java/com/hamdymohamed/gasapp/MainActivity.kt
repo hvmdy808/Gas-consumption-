@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.location.Geocoder
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -33,9 +34,11 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
     lateinit var detailsButton: Button
     lateinit var checkBstRoute: CheckBox
     lateinit var bstRouteButton: Button
-    var cc: Int? = null
-    var gasType: Int? = null
+    lateinit var mapButtor: Button
+    var cc: Int = 1500
+    var gasType: Int = 92
     lateinit var file: SharedPreferences
+    val LocationsViewed = mutableListOf<Location>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,30 +61,33 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
         detailsButton = findViewById(R.id.detailsButton)
         bstRouteButton = findViewById(R.id.bstRouteButton)
         checkBstRoute = findViewById(R.id.checkBstRoute)
+        mapButtor = findViewById(R.id.mapButton)
 
-        val ccExtra = intent.getStringExtra("cc")
-        val gasTypeExtra = intent.getStringExtra("gasType")
+        val ccExtra = intent.getStringExtra("cc")?.toIntOrNull()
+        val gasTypeExtra = intent.getStringExtra("gasType")?.toIntOrNull()
 
         if (ccExtra != null && gasTypeExtra != null) {
-            cc = ccExtra.toInt()
-            gasType = gasTypeExtra.toInt()
+            cc = ccExtra
+            gasType = gasTypeExtra
         } else {
             // Retrieve values from SharedPreferences as fallback
             file = getSharedPreferences("data", MODE_PRIVATE)
-            val savedCc = file.getString("ccNum", null)
-            val savedGasType = file.getString("gasType", null)
+            val savedCc = file.getString("ccNum", null)?.toIntOrNull()
+            val savedGasType = file.getString("gasType", null)?.toIntOrNull()
 
             if (savedCc != null && savedGasType != null) {
-                cc = savedCc.toInt()
-                gasType = savedGasType.toInt()
+                cc = savedCc
+                gasType = savedGasType
             } else {
-
                 Toast.makeText(
                     this,
                     "No engine data available. Please enter your cc and gas type.",
                     Toast.LENGTH_LONG
                 ).show()
-
+                file.edit()
+                    .putString("ccNum", cc.toString())
+                    .putString("gasType", gasType.toString())
+                    .apply()
             }
         }
 
@@ -97,6 +103,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
         checkBstRoute.isEnabled = false
         bstRouteButton.isEnabled = false
         bstRouteButton.isEnabled = false
+        mapButtor.isEnabled = false
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -114,6 +121,8 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
     }
 
     fun Calculate(view: View) {
+        mapButtor.isEnabled=false
+        LocationsViewed.clear()
         errorTxt.text = ""
         var result = ""
         var totalDistance: Float = 0.0F
@@ -206,6 +215,8 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                 dist1 = loc1.distanceTo(loc2) / 1000
                 totalDistance += dist1
                 var lastLoc = loc2
+                LocationsViewed.add(loc1)
+                LocationsViewed.add(loc2)
 
                 if (!(add3.isNullOrEmpty() || add3 == " Egypt")) {
                     val addList3 = geoCoder.getFromLocationName(add3, 1)
@@ -224,6 +235,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                         dist2 = loc2.distanceTo(loc3) / 1000
                         totalDistance += dist2
                         lastLoc = loc3
+                        LocationsViewed.add(loc3)
 
                         if (!(add4.isNullOrEmpty() || add4 == " Egypt")) {
                             val addList4 = geoCoder.getFromLocationName(add4, 1)
@@ -242,6 +254,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                                 dist3 = loc3.distanceTo(loc4) / 1000
                                 totalDistance += dist3
                                 lastLoc = loc4
+                                LocationsViewed.add(loc4)
                             } else {
                                 result = "The fourth location is not valid"
                                 smthngWrong = true
@@ -255,6 +268,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                 if (checkReturn.isChecked) {
                     dist4 = lastLoc.distanceTo(loc1) / 1000
                     totalDistance += dist4
+                    LocationsViewed.add(loc1)
                 }
             } else {
                 result = "The second location is not valid"
@@ -310,6 +324,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
             detailsButton.isEnabled = false
         }
         detailsButton.isEnabled = true
+        mapButtor.isEnabled = true
     }
 
     override fun onFailure(locationFailedEnum: AirLocation.LocationFailedEnum) {
@@ -348,10 +363,14 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
         calcButton.isEnabled = true
         //showButton.isEnabled = false
         checkBstRoute.isEnabled = true
+        mapButtor.isEnabled = false
+        LocationsViewed.clear()
     }
 
     fun showDetails(view: View) {
         var result = ""
+        mapButtor.isEnabled = false
+        LocationsViewed.clear()
         var totalDistance: Float = 0.0F
         var smthngWrong: Boolean = false
         val dist1: Float
@@ -423,6 +442,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
             val loc1 = Location("")
             loc1.latitude = addList1[0].latitude
             loc1.longitude = addList1[0].longitude
+            LocationsViewed.add(loc1)
 
             val addList2 = geoCoder.getFromLocationName(add2, 1)
             if (!addList2.isNullOrEmpty()) {
@@ -441,6 +461,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                 dist1 = loc1.distanceTo(loc2) / 1000
                 result += "Distance between ${startLoc.text} to ${secLoc.text} =$dist1 km"
                 var lastLoc = add2
+                LocationsViewed.add(loc2)
                 if (!(add3.isNullOrEmpty() || add3 == " Egypt")) {
                     val addList3 = geoCoder.getFromLocationName(add3, 1)
                     if (!addList3.isNullOrEmpty()) {
@@ -459,6 +480,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                         dist2 = loc2.distanceTo(loc3) / 1000
                         result += "\nDistance between ${secLoc.text} to ${add3} =$dist2 km"
                         lastLoc = add3
+                        LocationsViewed.add(loc3)
                         if (!(add4.isNullOrEmpty() || add4 == " Egypt")) {
                             val addList4 = geoCoder.getFromLocationName(add4, 1)
                             if (!addList4.isNullOrEmpty()) {
@@ -477,9 +499,11 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                                 dist3 = loc3.distanceTo(loc4) / 1000
                                 result += "\nDistance between ${lastLoc} to ${add4} =$dist3 km"
                                 lastLoc = add4
+                                LocationsViewed.add(loc4)
                                 if (checkReturn.isChecked) {
                                     dist4 = loc4.distanceTo(loc1) / 1000
                                     result += "\nDistance between ${lastLoc} to ${startLoc.text} =$dist4 km"
+                                    LocationsViewed.add(loc1)
                                 }
                             } else {
                                 result = "The fourth location is not valid"
@@ -489,6 +513,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                             if (checkReturn.isChecked) {
                                 dist3 = loc3.distanceTo(loc1) / 1000
                                 result += "\nDistance between ${lastLoc} to ${startLoc.text} =$dist3 km"
+                                LocationsViewed.add(loc1)
                             }
                         }
                     } else {
@@ -499,6 +524,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
                     if (checkReturn.isChecked) {
                         dist2 = loc2.distanceTo(loc1) / 1000
                         result += "\nDistance between ${secLoc.text} to ${startLoc.text} =$dist2 km"
+                        LocationsViewed.add(loc1)
                     }
                 }
             } else {
@@ -509,12 +535,8 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
             result = "The first location is not valid"
             smthngWrong = true
         }
-
-        if (!smthngWrong) {
-            resultText.text = result
-        } else {
-            resultText.text = result
-        }
+        mapButtor.isEnabled=true
+        resultText.text = result
     }
 
 
@@ -526,6 +548,8 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
     fun showBstRoute(view: View) {
         detailsButton.isEnabled= false
         errorTxt.text = ""
+        mapButtor.isEnabled=false
+        LocationsViewed.clear()
 
         // Gather addresses with " Egypt" appended.
         val addresses = mutableListOf<String>()
@@ -606,7 +630,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
         for (i in 1 until locations.size) {
             unvisited.add(i)
         }
-
+        LocationsViewed.add(locations[0]);
         // While there are still unvisited locations...
         while (unvisited.size > 0) {
             var nearestIndex = -1
@@ -627,6 +651,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
             routeDesc += " -> (" + String.format("%.2f", nearestDistance) + " km) -> " +
                     addresses[nearestIndex].replace(" Egypt", "")
             currentIndex = nearestIndex
+            LocationsViewed.add(locations[nearestIndex])
             unvisited.remove(nearestIndex)
         }
 
@@ -636,6 +661,7 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
             totalDistance += returnDistance
             routeDesc += " -> (" + String.format("%.2f", returnDistance) + " km) -> " +
                     addresses[0].replace(" Egypt", "")
+            LocationsViewed.add(locations[0])
         }
 
         routeDesc += "\nTotal Distance: " + String.format("%.2f", totalDistance) + " km"
@@ -679,6 +705,38 @@ class MainActivity : AppCompatActivity(), AirLocation.Callback {
         }
 
         resultText.text = routeDesc
+        mapButtor.isEnabled=true
+    }
 
+    fun Map(view: View) {
+        if (LocationsViewed.size < 2) {
+            throw IllegalArgumentException("At least 2 locations needed.")
+        }
+        val origin = "${LocationsViewed[0].latitude},${LocationsViewed[0].longitude}"
+        val destination = "${LocationsViewed[LocationsViewed.size - 1].latitude},${LocationsViewed[LocationsViewed.size - 1].longitude}"
+
+        var waypoints = ""
+        for (i in 1 until LocationsViewed.size - 1) {
+            waypoints += "${LocationsViewed[i].latitude},${LocationsViewed[i].longitude}"
+            if (i != LocationsViewed.size - 2) {
+                waypoints += "|"
+            }
+        }
+
+        var url = "https://www.google.com/maps/dir/?api=1&origin=$origin&destination=$destination"
+        if (waypoints.isNotEmpty()) {
+            url += "&waypoints=$waypoints"
+        }
+        url += "&travelmode=driving"
+
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+                setPackage("com.google.android.apps.maps")
+            }
+            startActivity(intent)
+        } catch (e: Exception) {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(browserIntent)
+        }
     }
 }
